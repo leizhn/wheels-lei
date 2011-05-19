@@ -1,0 +1,1 @@
+java -cp .;./lib/* com.tinfochina.entry.ClassPathContextLoader beans.xml

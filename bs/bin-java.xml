@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project default="main" name="wheels-lei" basedir=".">
+	<property name="dir.sys" value="${user.home}/builds" />
+	<property name="dir.build" value="${dir.sys}/${ant.project.name}" />
+	<property name="dir.temp" value="${dir.build}/temp" />
+	<property name="dir.dest" value="${dir.build}/dest" />
+	<property name="dir.test" value="${dir.build}/test" />
+
+	<property name="dir.project" value="${basedir}/.." />
+	<property name="dir.temp.classes" value="${dir.temp}/classes" />
+
+	<property name="dir.java" value="${dir.project}/java" />
+	<property name="dir.java.src" value="${dir.java}/src" />
+	<property name="dir.java.lib" value="${dir.java}/lib" />
+	<property name="dir.java.data" value="${dir.java}/data" />
+	<property name="dir.java.test" value="${dir.java}/test" />
+
+	<property name="dir.test.classes" value="${dir.test}/classes" />
+	<property name="dir.test.result" value="${dir.test}/result" />
+
+	<property name="path.jar" value="${dir.dest}/${ant.project.name}.jar" />
+	<property name="path.src.zip" value="${dir.dest}/${ant.project.name}-src.zip" />
+
+	<path id="compile.classpath">
+		<fileset dir="${dir.java.lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="main">
+		<antcall target="package" />
+	</target>
+	<target name="package" depends="compile,test">
+		<jar destfile="${path.jar}">
+			<fileset dir="${dir.temp.classes}" />
+			<fileset dir="${dir.java.src}" />
+		</jar>
+		<zip destfile="${path.src.zip}" >
+			<fileset dir="${dir.java.src}" />
+		</zip>
+	</target>
+	<target name="compile" depends="clean">
+		<mkdir dir="${dir.temp.classes}" />
+		
+		<javac destdir="${dir.temp.classes}" deprecation="on" debug="on"
+			encoding="GBK" includeantruntime="true">
+			<src path="${dir.java.src}" />
+			<classpath refid="compile.classpath" />
+		</javac>
+	</target>
+	<target name="test">
+		<mkdir dir="${dir.test.result}" />
+		<mkdir dir="${dir.test.classes}" />
+		
+		<javac srcdir="${dir.java.test}" destdir="${dir.test.classes}"
+			deprecation="on" debug="on" includeantruntime="on">
+			<classpath refid="compile.classpath" />
+			<classpath location="${dir.temp.classes}" />
+		</javac>
+		<junit printsummary="yes" haltonfailure="true">
+			<formatter type="plain" />
+			<classpath refid="compile.classpath" />
+			<classpath>
+				<pathelement location="${dir.test.classes}" />
+				<pathelement location="${dir.temp.classes}" />
+				<pathelement location="${dir.java.data}" />
+			</classpath>
+			<batchtest todir="${dir.test.result}">
+				<fileset dir="${dir.java.test}">
+					<include name="**/*Suites.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	<target name="clean">
+		<echo>${ant.project.name} prepare clean...</echo>
+		<mkdir dir="${dir.build}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${dir.build}" includes="**/*" />
+		</delete>
+		<mkdir dir="${dir.dest}" />
+		<mkdir dir="${dir.temp}" />
+		<mkdir dir="${dir.test}" />
+	</target>
+</project>

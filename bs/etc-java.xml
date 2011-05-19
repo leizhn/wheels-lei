@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project default="main" basedir="." name="mockDatas-debug-etc">
+	<property name="dir.sys" value="${user.home}/builds" />
+	<property name="dir.build" value="${dir.sys}/${ant.project.name}" />
+	<property name="dir.dest" value="${dir.build}/dest"/>
+	
+	<property name="dir.project" value="${basedir}/.."/>
+	
+	<property name="dir.java" value="${dir.project}/java" />
+	<property name="dir.etc" value="${dir.java}/etc" />
+	<property name="dir.target" value="${dir.dest}" />
+	<target name="main">
+		<echo>${path.env}</echo>
+		<antcall target="dist" />
+	</target>
+
+	<target name="dist">
+		<mkdir dir="${dir.target}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${dir.target}" includes="**/*" />
+		</delete>
+		<filter filtersfile="${path.env}" />
+		<copy toDir="${dir.target}" filtering="true">
+			<fileset dir="${dir.etc}" />
+		</copy>
+	</target>
+</project>
+
+

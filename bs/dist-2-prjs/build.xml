@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project default="main" name="dist-wheels-2-other-projects"
+	basedir=".">
+	<property name="dir.sys" value="${user.home}/builds" />
+	<property name="dir.build" value="${dir.sys}/${ant.project.name}" />
+	<property name="dir.binary" value="${dir.build}/binary" />
+	
+	<property name="dir.build.script" value="${basedir}/.."></property>
+	<property name="dir.project" value="${dir.build.script}/.."></property>
+	<property name="dir.projects" value="${dir.project}/.." />
+
+	<property name="dir.project.java" value="${dir.project}/java" />
+
+	<property name="dir.project.optMnt" value="${dir.projects}/optMnt" />
+	<property name="dir.project.transit" value="${dir.projects}/transit" />
+	<property name="dir.project.midware" value="${dir.projects}/renderMiddleware" />
+	<property name="dir.project.plat" value="${dir.projects}/plat" />
+	<property name="dir.project.tpeg" value="${dir.projects}/tpeg" />
+	<property name="dir.project.affairs" value="${dir.projects}/affairs" />
+	<property name="dir.project.mockDatas" value="${dir.projects}/mockDatas" />
+	<property name="dir.project.smtic" value="${dir.projects}/smticTransit" />
+	<property name="dir.project.fcd" value="${dir.projects}/fcd" />
+	<property name="dir.project.newcom-rds" value="${dir.projects}/newcom-rds" />
+	<property name="dir.project.unireceive" value="${dir.projects}/UnifiedReceiver" />
+	<property name="dir.target" value="java/lib/2nd" />
+	<property name="dir.target.ab" value="java/wkspc/WebRoot/WEB-INF/lib" />
+
+	<!-- entry -->
+	<target name="main">
+		<ant antfile="../bin-java.xml" inheritall="false">
+			<property name="dir.dest" value="${dir.binary}" />
+		</ant>
+		<antcall target="dist" />
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="${dir.build}"/>
+		<delete includeemptydirs="true">
+			<fileset dir="${dir.build}" includes="**/*" />
+		</delete>
+		<mkdir dir="${dir.binary}"/>
+	</target>
+	
+	<target name="dist">
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.optMnt}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.transit}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.midware}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh"> 
+			<param name="param.dir" value="${dir.project.plat}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.tpeg}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.affairs}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.mockDatas}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.smtic}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.fcd}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.newcom-rds}/${dir.target}" />
+		</antcall>
+		<antcall target="refresh">
+			<param name="param.dir" value="${dir.project.unireceive}/${dir.target}" />
+		</antcall>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - target: refresh - - - - - - - - - 
+		- - - - - - - - -->
+	<target name="refresh" description="desc">
+		<echo>refresh : ${param.dir}</echo>
+		<delete verbose="true">
+			<fileset dir="${param.dir}">
+				<include name="**/wheel*.jar" />
+			</fileset>
+		</delete>
+		<copy todir="${param.dir}">
+			<fileset dir="${dir.binary}" >
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+	</target>
+</project>

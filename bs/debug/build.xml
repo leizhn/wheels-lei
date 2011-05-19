@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project default="main" name="wheels.debug" basedir=".">
+
+	<property name="dir.debugs" value="${user.home}/debugs" />
+	
+	<property name="dir.project" value="${basedir}/../.." />
+	<property name="dir.java" value="${dir.project}/java" />
+	
+	<property name="dir.target" value="${dir.debugs}/${ant.project.name}" />
+	<property name="dir.java.etc" value="${dir.java}/etc" />
+
+	<property name="path.env" value="${basedir}/env.properties" />
+
+	<target name="main">
+		<antcall target="copyEtc" />
+	</target>
+
+	<target name="copyEtc">
+		<mkdir dir="${dir.target}" />
+		<delete includeemptydirs="true">
+			<fileset dir="${dir.target}" includes="**/*" />
+		</delete>
+		<filter filtersfile="${path.env}" />
+		<copy toDir="${dir.target}" filtering="true" encoding="UTF-8">
+			<fileset dir="${dir.java.etc}" />
+		</copy>
+	</target>
+</project>

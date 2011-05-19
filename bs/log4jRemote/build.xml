@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project default="main" name="log4jRemoteServer" basedir=".">
+	<property name="dir.sys" value="${user.home}/builds" />
+	<property name="dir.build" value="${dir.sys}/${ant.project.name}" />
+	<property name="dir.temp" value="${dir.build}/temp"/>
+	<property name="dir.dest" value="${dir.build}/dest"/>
+	<property name="dir.test" value="${dir.build}/test" />
+	<property name="dir.bin" value="${dir.build}/bin" />
+	
+	<property name="dir.project" value="${basedir}/../.."/>
+
+	<property name="dir.temp.lib" value="${dir.temp}/lib" />
+	<property name="dir.temp.etc" value="${dir.temp}/etc" />
+	
+	<property name="dir.java" value="${dir.project}/java"/>
+	<property name="dir.etc" value="${basedir}/etc" />
+	<property name="dir.lib" value="${dir.java}/lib" />
+	
+	<property name="name.bin" value="${ant.project.name}"/>
+	<property name="path.dest.zip" value="${dir.dest}/${ant.project.name}.zip"/>
+
+	<!-- entry -->
+	<target name="main">
+		<antcall target="clean" />
+		<ant antfile="../bin-java.xml" inheritall="false">
+			<property name="path.jar" value="${dir.bin}/${name.bin}.jar"/>
+		</ant>
+		<ant antfile="../etc-java.xml" inheritall="false">
+			<property name="path.env" value="${basedir}/env.properties"/>
+			<property name="dir.dest" value="${dir.temp.etc}"/>
+			<property name="dir.etc" value="${dir.etc}"/>
+		</ant>
+		<antcall target="copy"></antcall>
+		<antcall target="package"></antcall>
+	</target>
+
+	<target name="clean">
+		<echo>${ant.project.name} prepare clean...</echo>
+		<mkdir dir="${dir.build}"/>
+		<delete includeemptydirs="true" >
+			<fileset dir="${dir.build}" includes="**/*" />
+		</delete>
+		<mkdir dir="${dir.dest}"/>
+		<mkdir dir="${dir.temp}"/>
+		<mkdir dir="${dir.temp.etc}"/>
+		<mkdir dir="${dir.bin}"/>
+	</target>
+	<target name="copy">
+		<mkdir dir="${dir.temp.lib}"/>
+		<copy todir="${dir.temp.lib}" flatten="true" includeemptydirs="false">
+			<fileset dir="${dir.lib}">
+				<exclude name="**/cntnr/" />
+			</fileset>
+		</copy>
+	</target>
+	<target name="package">
+		<zip destfile="${path.dest.zip}">
+			<zipfileset dir="${dir.temp.lib}" prefix="lib"></zipfileset>
+			<zipfileset dir="${dir.bin}" prefix="lib"></zipfileset>
+			<zipfileset dir="${dir.temp.etc}/ctx" ></zipfileset>
+			<zipfileset dir="${dir.temp.etc}/log" ></zipfileset>
+			<zipfileset dir="${dir.temp.etc}/ss" ></zipfileset>
+		</zip>
+	</target>
+</project>
+
+
