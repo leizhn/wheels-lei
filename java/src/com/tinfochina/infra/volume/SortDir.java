@@ -3,10 +3,11 @@ package com.tinfochina.infra.volume;
 /**
  * 表示排序方向
  * 
- * @author leizhn
- * @version 0.1.0,2011-01-06
+ * @author zhenhua.lei
+ * @version 0.1.1,2011-5-19
+ * @deprecated
  */
-public class SortDir {
+final public class SortDir {
 	private SortDir(String description) {
 		this.description = description;
 	}
