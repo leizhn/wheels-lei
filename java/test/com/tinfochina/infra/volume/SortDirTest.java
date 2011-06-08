@@ -4,6 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+@Deprecated
 public class SortDirTest {
 	@Test
 	public void testEqualsObject() {

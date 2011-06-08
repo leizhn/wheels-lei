@@ -2,8 +2,6 @@ package com.autonavi.infra.utils;
 
 import java.util.Collection;
 
-import org.apache.commons.lang.ArrayUtils;
-
 import com.autonavi.infra.value.Bytesable;
 
 /**
@@ -13,26 +11,36 @@ import com.autonavi.infra.value.Bytesable;
  */
 public final class ByteArrayUtils {
 	final public static byte[] join(byte[]... bss) {
-		byte[] result = new byte[] {};
-		for (byte[] bs : bss) {
-			result = ArrayUtils.addAll(result, bs);
+		int length = 0;
+		for(byte[] bs:bss){
+			length +=bs.length;
+		}
+		byte[] result = new byte[length];
+		int destPos = 0;
+		for(byte[] bs:bss){
+			System.arraycopy(bs, 0, result, destPos, bs.length);
+			destPos+=bs.length;
 		}
 		return result;
 	}
 
 	final public static byte[] join(Bytesable... bss) {
-		byte[] result = new byte[] {};
-		for (Bytesable bs : bss) {
-			result = ArrayUtils.addAll(result, bs.toBytes());
+		int size = bss.length;
+		byte[][] _bss = new byte[size][];
+		for(int i=0;i<size;i++){
+			_bss[i] = bss[i].toBytes();
 		}
-		return result;
+		return join(_bss);
 	}
 
 	final public static byte[] join(Collection<? extends Bytesable> bss) {
-		byte[] result = new byte[] {};
-		for (Bytesable bs : bss) {
-			result = ArrayUtils.addAll(result, bs.toBytes());
+		int size = bss.size();
+		byte[][] _bss = new byte[size][];
+		int index=0;
+		for(Bytesable b:bss){
+			_bss[index]=b.toBytes();
+			index++;
 		}
-		return result;
+		return join(_bss);
 	}
 }
